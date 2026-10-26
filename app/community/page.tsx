@@ -10,7 +10,14 @@ import {
 import { Icon } from '../../src/Icons';
 import LinkList from '../../src/LinkList';
 import PhotoWall from '../../src/PhotoWall';
-import { DOCS, FORUM, GITHUB } from '../../src/site';
+import {
+  DOCS,
+  FORUM,
+  GITHUB,
+  GITHUB_CONTRIBUTING,
+  GITHUB_ISSUES,
+  docs,
+} from '../../src/site';
 
 export const metadata: Metadata = {
   title: 'Community',
@@ -24,7 +31,7 @@ const waysToHelp = [
     title: 'Fix a bug or build a feature',
     description:
       'Start with issues labelled “good first issue” or “help wanted”. For anything significant, open an issue and talk it through first.',
-    href: `${GITHUB}/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22`,
+    href: `${GITHUB_ISSUES}?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22`,
     cta: 'Good first issues',
   },
   {
@@ -40,7 +47,7 @@ const waysToHelp = [
     title: 'Try it and tell us what breaks',
     description:
       'Run the apps, sync some data, and report anything that breaks or feels rough.',
-    href: `${GITHUB}/issues`,
+    href: GITHUB_ISSUES,
     cta: 'Report an issue',
   },
   {
@@ -50,6 +57,14 @@ const waysToHelp = [
       'Answer questions, share how you use ODE, and swap ideas with others doing similar work.',
     href: FORUM,
     cta: 'Visit the forum',
+  },
+  {
+    label: 'EXAMPLES',
+    title: 'See how others use it',
+    description:
+      'Sample configurations and workflows from the ODE docs, ready to reuse or improve.',
+    href: docs.examples,
+    cta: 'Browse examples',
   },
 ];
 
@@ -190,11 +205,20 @@ export default function CommunityPage() {
         <LinkList items={waysToHelp} />
         <a
           className="inline-link page-section-link"
-          href={`${GITHUB}/blob/main/CONTRIBUTING.md`}
+          href={GITHUB_CONTRIBUTING}
           target="_blank"
           rel="noreferrer"
         >
           Read the contributing guide{' '}
+          <Icon name="diagonal" size="var(--icon-size-site-17)" />
+        </a>
+        <a
+          className="inline-link page-section-link"
+          href={docs.setup}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Development setup{' '}
           <Icon name="diagonal" size="var(--icon-size-site-17)" />
         </a>
       </section>

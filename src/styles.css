@@ -1612,6 +1612,7 @@ h2,
 }
 .footer-links {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--size-90);
 }
 .footer-links > div {
@@ -1619,6 +1620,7 @@ h2,
   flex-direction: column;
   align-items: flex-start;
   gap: var(--size-13);
+  min-width: var(--size-100);
 }
 .footer-links h3 {
   font-size: var(--font-size-site-7);
@@ -1657,6 +1659,12 @@ h2,
   gap: var(--spacing-2);
   margin-left: auto;
   margin-right: var(--size-65);
+}
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--spacing-2) var(--spacing-5);
 }
 .footer-bottom a:hover {
   color: var(--lime);
@@ -1936,6 +1944,9 @@ h2,
 }
 .page-section-link {
   margin-top: var(--size-39);
+}
+.page-section-link + .page-section-link {
+  margin-top: var(--spacing-4);
 }
 .link-list {
   margin-top: var(--size-39);
@@ -4019,8 +4030,9 @@ h2,
     margin: 0;
     font-size: var(--font-size-site-8);
   }
-  .footer-bottom > a {
+  .footer-legal {
     margin-left: auto;
+    justify-content: flex-start;
   }
   .demo-body {
     padding: var(--size-23) var(--spacing-5) var(--size-18);
@@ -4375,7 +4387,6 @@ h2,
   margin-top: var(--size-45);
 }
 
-
 .testimonial-modal-overlay {
   position: fixed;
   inset: 0;
@@ -4635,7 +4646,6 @@ h2,
   color: var(--color-site-8a917a);
 }
 
-
 @keyframes fadeIn {
   from {
     opacity: var(--opacity-0);
@@ -4659,7 +4669,6 @@ h2,
 body.modal-open .back-to-top {
   display: none !important;
 }
-
 
 @media (max-width: 1024px) {
   .testimonials-carousel {

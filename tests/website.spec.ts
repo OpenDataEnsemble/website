@@ -124,7 +124,126 @@ test('all internal navigation links have real targets', async ({ page }) => {
   expect(broken).toEqual([]);
   await expect(
     page.getByRole('link', { name: 'Get started with ODE' }),
-  ).toHaveAttribute('href', 'https://opendataensemble.org/docs/');
+  ).toHaveAttribute(
+    'href',
+    'https://opendataensemble.org/docs/getting-started',
+  );
+  await expect(
+    page.getByRole('link', { name: 'Get the latest release' }),
+  ).toHaveAttribute('href', 'https://opendataensemble.org/downloads');
+});
+
+test('header, footer, and product links match the docs site', async ({
+  page,
+}) => {
+  const origin = 'https://opendataensemble.org';
+  await page.goto('/');
+  const navigation = page.getByRole('navigation', { name: 'Main navigation' });
+  await expect(
+    navigation.getByRole('link', { name: 'Documentation' }),
+  ).toHaveAttribute('href', `${origin}/docs`);
+  await expect(
+    navigation.getByRole('link', { name: 'Downloads' }),
+  ).toHaveAttribute('href', `${origin}/downloads`);
+  await expect(
+    page.getByRole('link', { name: 'Explore Formulus' }),
+  ).toHaveAttribute('href', `${origin}/docs/reference/formulus`);
+  await page.getByRole('tab', { name: '02 Synchronize' }).click();
+  await expect(
+    page.getByRole('link', { name: 'Explore Synkronus' }),
+  ).toHaveAttribute('href', `${origin}/docs/reference/synkronus-server`);
+  await page.getByRole('tab', { name: '03 Explore' }).click();
+  await expect(
+    page.getByRole('link', { name: 'Explore ODE Desktop' }),
+  ).toHaveAttribute('href', `${origin}/docs/reference/ode-desktop`);
+  await expect(
+    page.getByRole('link', { name: 'Command-line tools' }),
+  ).toHaveAttribute('href', `${origin}/docs/reference/synkronus-cli`);
+  await expect(
+    page.getByRole('link', { name: 'One shared API' }),
+  ).toHaveAttribute(
+    'href',
+    `${origin}/docs/getting-started/architecture-overview`,
+  );
+
+  const footer = page.getByRole('contentinfo');
+  await expect(footer.getByRole('link', { name: 'Overview' })).toHaveAttribute(
+    'href',
+    `${origin}/docs`,
+  );
+  await expect(
+    footer.getByRole('link', { name: 'Getting started' }),
+  ).toHaveAttribute('href', `${origin}/docs/getting-started`);
+  await expect(footer.getByRole('link', { name: 'Downloads' })).toHaveAttribute(
+    'href',
+    `${origin}/downloads`,
+  );
+  await expect(footer.getByRole('link', { name: 'Using ODE' })).toHaveAttribute(
+    'href',
+    `${origin}/docs/using`,
+  );
+  await expect(footer.getByRole('link', { name: 'Reference' })).toHaveAttribute(
+    'href',
+    `${origin}/docs/reference`,
+  );
+  await expect(footer.getByRole('link', { name: 'Forum' })).toHaveAttribute(
+    'href',
+    'https://forum.opendataensemble.org',
+  );
+  await expect(footer.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
+    'href',
+    'https://www.linkedin.com/company/opendataensemble',
+  );
+  await expect(footer.getByRole('link', { name: 'TikTok' })).toHaveAttribute(
+    'href',
+    'https://www.tiktok.com/@opendataensemble',
+  );
+  const legal = footer.getByRole('navigation', { name: 'Legal' });
+  await expect(legal.getByRole('link', { name: 'Privacy' })).toHaveAttribute(
+    'href',
+    `${origin}/docs/legal/formulus-privacy-policy`,
+  );
+  await expect(legal.getByRole('link', { name: 'Terms' })).toHaveAttribute(
+    'href',
+    `${origin}/docs/legal/formulus-terms`,
+  );
+  await expect(
+    legal.getByRole('link', { name: 'Account deletion' }),
+  ).toHaveAttribute('href', `${origin}/docs/legal/formulus-account-deletion`);
+  await expect(legal.getByRole('link', { name: 'License' })).toHaveAttribute(
+    'href',
+    `${origin}/docs/legal/open-source-license`,
+  );
+
+  await page.goto('/about');
+  await expect(
+    page.getByRole('link', { name: /Formulus reference/ }),
+  ).toHaveAttribute('href', `${origin}/docs/reference/formulus`);
+  await expect(
+    page.getByRole('link', { name: /Formplayer reference/ }),
+  ).toHaveAttribute('href', `${origin}/docs/reference/formplayer`);
+  await expect(
+    page.getByRole('link', { name: /CLI reference/ }),
+  ).toHaveAttribute('href', `${origin}/docs/reference/synkronus-cli`);
+
+  await page.goto('/contact');
+  await expect(
+    page.getByRole('link', { name: /Ask on the forum/ }),
+  ).toHaveAttribute('href', 'https://forum.opendataensemble.org');
+  await expect(
+    page.getByRole('link', { name: /Send an email/ }),
+  ).toHaveAttribute('href', 'mailto:hello@opendataensemble.org');
+  await expect(
+    page.getByRole('link', { name: /Help resources/ }),
+  ).toHaveAttribute('href', `${origin}/docs/community/getting-help`);
+
+  await page.goto('/community');
+  await expect(
+    page.getByRole('link', { name: /Browse examples/ }),
+  ).toHaveAttribute('href', `${origin}/docs/community/examples`);
+  await expect(
+    page.getByRole('link', { name: /Development setup/ }),
+  ).toHaveAttribute('href', `${origin}/docs/development/setup`);
 });
 
 const pages = [

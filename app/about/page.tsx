@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Icon } from '../../src/Icons';
 import LinkList from '../../src/LinkList';
 import PageIntro from '../../src/PageIntro';
-import { DOCS, GITHUB, faqs } from '../../src/site';
+import { GITHUB_PORTAL, docs, faqs } from '../../src/site';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -16,31 +16,47 @@ const tools = [
     title: 'Formulus',
     description:
       'The mobile app. Custom forms and apps, photos, audio, and locations, offline by design.',
-    href: 'https://opendataensemble.org/docs/reference/form-specifications',
-    cta: 'Form specifications',
+    href: docs.formulus,
+    cta: 'Formulus reference',
   },
   {
     label: 'SYNCHRONIZE',
-    title: 'Synkronus',
+    title: 'Synkronus Server',
     description:
       'The server in the middle. One public API that brings observations and attachments together when a connection returns.',
-    href: 'https://opendataensemble.org/docs/getting-started/architecture-overview',
-    cta: 'Architecture overview',
+    href: docs.synkronus,
+    cta: 'Synkronus reference',
+  },
+  {
+    label: 'RENDER',
+    title: 'Formplayer',
+    description:
+      'The form renderer used in Formulus and ODE Desktop. JSON Schema, JSON Forms, and the field types you can actually rely on.',
+    href: docs.formplayer,
+    cta: 'Formplayer reference',
   },
   {
     label: 'EXPLORE',
     title: 'ODE Desktop',
     description:
       'Manage observations locally, build and test your next custom app in the workbench.',
-    href: 'https://opendataensemble.org/docs/guides/ode-desktop-developer-mode',
-    cta: 'Developer mode guide',
+    href: docs.odeDesktop,
+    cta: 'ODE Desktop reference',
+  },
+  {
+    label: 'CLI',
+    title: 'Synkronus CLI',
+    description:
+      'Export observations, manage users and app bundles, and talk to the same public API from the command line.',
+    href: docs.synkronusCli,
+    cta: 'CLI reference',
   },
   {
     label: 'MANAGE',
-    title: 'Web Portal and CLI',
+    title: 'Web Portal',
     description:
-      'Manage app bundles, users, observations, and exports in the browser, or use the CLI to export data for your own analysis tools.',
-    href: `${GITHUB}/tree/main/synkronus-portal`,
+      'Manage app bundles, users, observations, and exports in the browser.',
+    href: GITHUB_PORTAL,
     cta: 'See the portal',
   },
 ];
@@ -169,7 +185,7 @@ export default function AboutPage() {
           </h2>
           <a
             className="inline-link"
-            href={DOCS}
+            href={docs.gettingStarted}
             target="_blank"
             rel="noreferrer"
           >

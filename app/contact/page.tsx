@@ -1,12 +1,18 @@
 import type { Metadata } from 'next';
 import LinkList from '../../src/LinkList';
 import PageIntro from '../../src/PageIntro';
-import { DOCS, FORUM, GITHUB, SECURITY_EMAIL } from '../../src/site';
+import {
+  FORUM,
+  GITHUB_ISSUES,
+  HELLO_EMAIL,
+  SECURITY_EMAIL,
+  docs,
+} from '../../src/site';
 
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Ask questions on the ODE community forum, report bugs on GitHub, and send security reports privately.',
+    'Ask questions on the ODE community forum, report bugs on GitHub, write hello@opendataensemble.org, and send security reports privately.',
 };
 
 const channels = [
@@ -23,8 +29,16 @@ const channels = [
     title: 'GitHub issues',
     description:
       'Found something broken, or have a concrete change in mind? Search existing reports first, then open an issue.',
-    href: `${GITHUB}/issues`,
+    href: GITHUB_ISSUES,
     cta: 'Open an issue',
+  },
+  {
+    label: 'GENERAL',
+    title: HELLO_EMAIL,
+    description:
+      'General inquiries, or if you want to get involved and aren’t sure where to start.',
+    href: `mailto:${HELLO_EMAIL}`,
+    cta: 'Send an email',
   },
   {
     label: 'SECURITY',
@@ -36,11 +50,11 @@ const channels = [
   },
   {
     label: 'SELF-SERVE',
-    title: 'Documentation',
+    title: 'Getting help',
     description:
-      'Setup guides, the architecture overview, and reference material, all in one place.',
-    href: DOCS,
-    cta: 'Read the docs',
+      'Docs, GitHub, and email in one place, plus what to include when you report a problem.',
+    href: docs.gettingHelp,
+    cta: 'Help resources',
   },
 ];
 
@@ -59,8 +73,9 @@ export default function ContactPage() {
         image="/brand/bird.png"
       >
         <p className="page-lead">
-          Questions belong on the forum. Bugs and patches go on GitHub. Security
-          reports come in by email.
+          Questions belong on the forum. Bugs and patches go on GitHub. General
+          inquiries go to hello@opendataensemble.org. Security reports come in
+          privately by email.
         </p>
         <p className="page-text">
           Search existing issues before opening a new one.

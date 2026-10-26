@@ -8,7 +8,7 @@ import Testimonials from './Testimonials';
 import { BrandMark, Icon, type IconName } from './Icons';
 import LinkList from './LinkList';
 import { asset } from './asset';
-import { DOCS, GITHUB } from './site';
+import { DOWNLOADS, GITHUB_PORTAL, docs } from './site';
 
 const workflows: {
   label: string;
@@ -33,7 +33,7 @@ const workflows: {
       'Forms that fit your work',
       'Photos, audio & locations',
     ],
-    link: 'https://opendataensemble.org/docs/reference/form-specifications',
+    link: docs.formulus,
   },
   {
     label: 'Synchronize',
@@ -48,7 +48,7 @@ const workflows: {
       'Observation & attachment sync',
       'Self-host on your terms',
     ],
-    link: 'https://opendataensemble.org/docs/getting-started/architecture-overview',
+    link: docs.synkronus,
   },
   {
     label: 'Explore',
@@ -63,7 +63,7 @@ const workflows: {
       'Forms & app workbench',
       'CLI exports for analysis',
     ],
-    link: 'https://opendataensemble.org/docs/guides/ode-desktop-developer-mode',
+    link: docs.odeDesktop,
   },
 ];
 
@@ -566,28 +566,16 @@ export default function Home() {
           <Icon name="code" size="var(--icon-size-site-17)" />
           <p>
             Also part of the ensemble.{' '}
-            <a
-              href="https://github.com/OpenDataEnsemble/ode/tree/main/synkronus-portal"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={GITHUB_PORTAL} target="_blank" rel="noreferrer">
               Web Portal <Icon name="diagonal" size="var(--icon-size-xs)" />
             </a>
             <span>·</span>
-            <a
-              href="https://github.com/OpenDataEnsemble/ode/tree/main/synkronus-cli"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={docs.synkronusCli} target="_blank" rel="noreferrer">
               Command-line tools{' '}
               <Icon name="diagonal" size="var(--icon-size-xs)" />
             </a>
             <span>·</span>
-            <a
-              href="https://opendataensemble.org/docs/getting-started/architecture-overview"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={docs.architecture} target="_blank" rel="noreferrer">
               One shared API <Icon name="diagonal" size="var(--icon-size-xs)" />
             </a>
           </p>
@@ -635,7 +623,7 @@ export default function Home() {
           <div className="cta-actions">
             <a
               className="button button-dark"
-              href={DOCS}
+              href={docs.gettingStarted}
               target="_blank"
               rel="noreferrer"
             >
@@ -644,7 +632,7 @@ export default function Home() {
             </a>
             <a
               className="button button-outline"
-              href={`${GITHUB}/releases`}
+              href={DOWNLOADS}
               target="_blank"
               rel="noreferrer"
             >

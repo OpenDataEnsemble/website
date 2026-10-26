@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import Brand from './Brand';
 import { Icon } from './Icons';
-import { DOCS, GITHUB, pageLinks } from './site';
+import { DOCS, DOWNLOADS, GITHUB, pageLinks } from './site';
 
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -51,6 +51,9 @@ export default function SiteHeader() {
           <a href={DOCS} target="_blank" rel="noreferrer">
             Documentation{' '}
             <Icon name="diagonal" size="var(--icon-size-site-13)" />
+          </a>
+          <a href={DOWNLOADS} target="_blank" rel="noreferrer">
+            Downloads <Icon name="diagonal" size="var(--icon-size-site-13)" />
           </a>
           <Link className="mobile-start" href="/#get-started">
             Get started <Icon name="diagonal" size="var(--icon-size-sm)" />
