@@ -1,18 +1,13 @@
 import type { Metadata } from 'next';
+import ContactMail from '../../src/ContactMail';
 import LinkList from '../../src/LinkList';
 import PageIntro from '../../src/PageIntro';
-import {
-  FORUM,
-  GITHUB_ISSUES,
-  HELLO_EMAIL,
-  SECURITY_EMAIL,
-  docs,
-} from '../../src/site';
+import { FORUM, GITHUB_ISSUES, docs } from '../../src/site';
 
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Ask questions on the ODE community forum, report bugs on GitHub, write hello@opendataensemble.org, and send security reports privately.',
+    'Ask questions on the ODE community forum, report bugs on GitHub, or write to us for a general inquiry or a private security report.',
 };
 
 const channels = [
@@ -31,22 +26,6 @@ const channels = [
       'Found something broken, or have a concrete change in mind? Search existing reports first, then open an issue.',
     href: GITHUB_ISSUES,
     cta: 'Open an issue',
-  },
-  {
-    label: 'GENERAL',
-    title: HELLO_EMAIL,
-    description:
-      'General inquiries, or if you want to get involved and aren’t sure where to start.',
-    href: `mailto:${HELLO_EMAIL}`,
-    cta: 'Send an email',
-  },
-  {
-    label: 'SECURITY',
-    title: SECURITY_EMAIL,
-    description:
-      'Please don’t report vulnerabilities in public issues. Email us privately so nothing is exposed before a fix exists.',
-    href: `mailto:${SECURITY_EMAIL}`,
-    cta: 'Email security',
   },
   {
     label: 'SELF-SERVE',
@@ -73,9 +52,8 @@ export default function ContactPage() {
         image="/brand/bird.png"
       >
         <p className="page-lead">
-          Questions belong on the forum. Bugs and patches go on GitHub. General
-          inquiries go to hello@opendataensemble.org. Security reports come in
-          privately by email.
+          Questions belong on the forum. Bugs and patches go on GitHub. Write to
+          us below for a general inquiry or a private security report.
         </p>
         <p className="page-text">
           Search existing issues before opening a new one.
@@ -88,6 +66,7 @@ export default function ContactPage() {
       >
         <LinkList items={channels} />
       </section>
+      <ContactMail />
     </>
   );
 }

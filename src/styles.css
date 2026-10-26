@@ -1085,6 +1085,8 @@ h2,
   overflow: hidden;
   transform: rotate(-3deg);
   animation: appear var(--duration-site-0-4s) var(--easing-site-ease) both;
+  position: relative;
+  z-index: var(--z-index-site-2);
 }
 .preview-window-top {
   background: var(--color-neutral-white);
@@ -1179,11 +1181,31 @@ h2,
 .platform-note a:hover {
   text-decoration: underline;
 }
-.workflow-panel-1 .workflow-art {
-  background: var(--color-brand-secondary-300);
-}
+.workflow-panel-1 .workflow-art,
 .workflow-panel-2 .workflow-art {
-  background: var(--color-brand-primary-800);
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  justify-items: stretch;
+  padding-left: var(--size-18);
+}
+.workflow-panel-1 .workflow-mascot,
+.workflow-panel-2 .workflow-mascot {
+  width: 122%;
+  max-width: none;
+  height: auto;
+  max-height: var(--size-400);
+  object-fit: contain;
+  object-position: left bottom;
+  justify-self: start;
+  z-index: var(--z-index-site-2);
+}
+.workflow-panel-2 .workflow-mascot {
+  margin-left: calc(-1 * var(--size-25));
+}
+.workflow-panel-1 .workflow-preview,
+.workflow-panel-2 .workflow-preview {
+  justify-self: end;
+  align-self: center;
+  z-index: var(--z-index-site-1);
 }
 .sync-diagram {
   padding: var(--size-27) var(--size-23) var(--size-25);
@@ -2011,6 +2033,125 @@ h2,
 }
 .link-row:hover .link-row-copy > strong {
   color: var(--color-site-627c3e);
+}
+.mail-form {
+  margin-top: var(--size-39);
+}
+.mail-kind {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: var(--border-width-thin) solid var(--line);
+  border-radius: var(--radius-site-7);
+  overflow: hidden;
+}
+.mail-kind > label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--size-7);
+  padding: var(--size-21) var(--spacing-6);
+  cursor: pointer;
+  background: var(--color-neutral-white);
+  transition: background var(--duration-site-0-2s);
+}
+.mail-kind > label + label {
+  border-left: var(--border-width-thin) solid var(--line);
+}
+.mail-kind > label:hover {
+  background: var(--color-brand-secondary-200);
+}
+.mail-kind > label.is-active {
+  background: var(--lime);
+}
+.mail-kind > label:has(:focus-visible) {
+  z-index: var(--z-index-site-1);
+}
+.mail-kind input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.mail-kind-label {
+  font-size: var(--font-size-site-13);
+  font-weight: var(--font-weight-site-550);
+}
+.mail-kind-address {
+  font-size: var(--font-size-site-10);
+  color: var(--color-site-6b7257);
+  word-break: break-all;
+}
+.mail-kind > label.is-active .mail-kind-address {
+  color: var(--ink);
+}
+.mail-kind-note {
+  margin-top: var(--size-14);
+  font-size: var(--font-size-site-11);
+  line-height: var(--font-line-height-site-1-6);
+  color: var(--color-site-6b7257);
+}
+.mail-table {
+  margin-top: var(--size-28);
+  display: grid;
+  gap: var(--size-22);
+}
+.mail-field {
+  display: grid;
+  grid-template-columns: var(--size-160) minmax(0, 1fr);
+  gap: var(--size-39);
+  align-items: start;
+}
+.mail-field > label {
+  padding-top: var(--size-12);
+  font-size: var(--font-size-site-8);
+  letter-spacing: var(--tracking-1-4);
+  font-weight: var(--font-weight-site-550);
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.mail-field input,
+.mail-field textarea {
+  display: block;
+  width: 100%;
+  padding: var(--size-12) 0;
+  border: 0;
+  border-bottom: var(--border-width-thin) solid var(--color-site-cfd6c3);
+  background: transparent;
+  font-size: var(--font-size-site-18);
+  color: var(--ink);
+  border-radius: 0;
+}
+.mail-field textarea {
+  min-height: var(--size-140);
+  resize: vertical;
+  line-height: var(--font-line-height-site-1-5);
+}
+.mail-field input:hover,
+.mail-field textarea:hover {
+  border-bottom-color: var(--color-site-8a917a);
+}
+.mail-field input:focus-visible,
+.mail-field textarea:focus-visible {
+  outline: none;
+  border-bottom-color: var(--ink);
+  box-shadow: 0 var(--border-width-medium) 0 var(--ink);
+}
+.mail-field input[aria-invalid='true'],
+.mail-field textarea[aria-invalid='true'] {
+  border-bottom-color: var(--color-site-c0392b);
+}
+.mail-send {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-5);
+  margin-top: var(--size-28);
+}
+.mail-send > span {
+  font-size: var(--font-size-site-10);
+  color: var(--color-site-6b7257);
 }
 .event-photo {
   display: block;
@@ -3295,6 +3436,13 @@ h2,
     grid-template-columns: var(--size-112) minmax(0, 1fr) auto;
     gap: var(--size-25);
   }
+  .mail-field {
+    grid-template-columns: var(--size-112) minmax(0, 1fr);
+    gap: var(--size-25);
+  }
+  .mail-kind > label {
+    padding: var(--size-18);
+  }
   .event-feature,
   .event-teaser,
   .event-hero-grid,
@@ -3349,6 +3497,26 @@ h2,
   }
   .workflow-art {
     padding: var(--spacing-10) var(--size-25) var(--size-50);
+  }
+  .workflow-panel-1 .workflow-art,
+  .workflow-panel-2 .workflow-art {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .workflow-panel-1 .workflow-mascot,
+  .workflow-panel-2 .workflow-mascot {
+    width: auto;
+    max-width: 90%;
+    height: auto;
+    max-height: var(--size-300);
+    object-fit: contain;
+  }
+  .workflow-panel-1 .workflow-preview,
+  .workflow-panel-2 .workflow-preview {
+    margin-inline: var(--size-25);
+    margin-bottom: var(--spacing-5);
   }
   .product-name {
     margin-bottom: var(--size-25);
@@ -3677,6 +3845,24 @@ h2,
     gap: var(--size-13);
     padding: var(--size-22) 0;
   }
+  .mail-field {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--size-8);
+  }
+  .mail-field > label {
+    padding-top: 0;
+  }
+  .mail-kind {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mail-kind > label + label {
+    border-left: 0;
+    border-top: var(--border-width-thin) solid var(--line);
+  }
+  .mail-send .button {
+    width: 100%;
+    justify-content: space-between;
+  }
   .link-row-copy > strong {
     font-size: var(--font-size-lg);
   }
@@ -3807,6 +3993,15 @@ h2,
   }
   .workflow-mascot {
     max-height: var(--size-240);
+  }
+  .workflow-panel-1 .workflow-mascot,
+  .workflow-panel-2 .workflow-mascot {
+    width: auto;
+    max-width: 92%;
+    height: auto;
+    max-height: var(--size-240);
+    margin-left: 0;
+    object-fit: contain;
   }
   .hero-avatar {
     width: 32%;

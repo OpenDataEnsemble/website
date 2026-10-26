@@ -231,9 +231,6 @@ test('header, footer, and product links match the docs site', async ({
     page.getByRole('link', { name: /Ask on the forum/ }),
   ).toHaveAttribute('href', 'https://forum.opendataensemble.org');
   await expect(
-    page.getByRole('link', { name: /Send an email/ }),
-  ).toHaveAttribute('href', 'mailto:hello@opendataensemble.org');
-  await expect(
     page.getByRole('link', { name: /Help resources/ }),
   ).toHaveAttribute('href', `${origin}/docs/community/getting-help`);
 
@@ -244,6 +241,49 @@ test('header, footer, and product links match the docs site', async ({
   await expect(
     page.getByRole('link', { name: /Development setup/ }),
   ).toHaveAttribute('href', `${origin}/docs/development/setup`);
+});
+
+test('contact form fills a mailto for general or security', async ({
+  page,
+}) => {
+  await page.goto('/contact');
+  const send = page.getByRole('link', { name: 'Send email' });
+  await send.click();
+  await expect(page.getByText('Add your name.')).toBeVisible();
+  await expect(send).toHaveAttribute(
+    'href',
+    /^mailto:hello@opendataensemble\.org/,
+  );
+
+  await page.getByLabel('Name', { exact: true }).fill('Ada Okello');
+  await page.getByLabel('Email', { exact: true }).fill('ada@example.org');
+  await page.getByLabel('Organization').fill('Groundbreaker');
+  await page
+    .getByLabel('Message')
+    .fill('I would like to try ODE in the field.');
+  await expect(send).toHaveAttribute(
+    'href',
+    /mailto:hello@opendataensemble\.org\?subject=.*Ada%20Okello/,
+  );
+  await expect(send).toHaveAttribute('href', /ada%40example\.org/);
+  await expect(send).toHaveAttribute('href', /Groundbreaker/);
+
+  await page.getByRole('radio', { name: 'Security' }).click();
+  const security = page.getByRole('link', { name: 'Email security' });
+  await expect(security).toHaveAttribute(
+    'href',
+    /^mailto:security@opendataensemble\.org/,
+  );
+  await expect(security).toHaveAttribute('href', /Security%20report/);
+  await expect(
+    page.getByText('Opens a message to security@opendataensemble.org'),
+  ).toBeVisible();
+
+  await page.getByRole('radio', { name: 'General' }).click();
+  await expect(page.getByRole('link', { name: 'Send email' })).toHaveAttribute(
+    'href',
+    /^mailto:hello@opendataensemble\.org/,
+  );
 });
 
 const pages = [
