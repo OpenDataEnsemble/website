@@ -119,7 +119,7 @@ export default function Testimonials() {
   useEffect(() => {
     if (isPaused || testimonials.length === 0) return;
 
-    lastTimeRef.current = Date.now();
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     const animate = () => {
       const now = Date.now();
@@ -130,13 +130,26 @@ export default function Testimonials() {
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    animationRef.current = requestAnimationFrame(animate);
-
-    return () => {
+    const stopAnimation = () => {
       if (animationRef.current !== null) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
       }
+    };
+
+    const updateAnimation = () => {
+      stopAnimation();
+      if (reducedMotion.matches) return;
+      lastTimeRef.current = Date.now();
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    updateAnimation();
+    reducedMotion.addEventListener('change', updateAnimation);
+
+    return () => {
+      stopAnimation();
+      reducedMotion.removeEventListener('change', updateAnimation);
     };
   }, [isPaused, testimonials.length]);
 
@@ -223,7 +236,7 @@ export default function Testimonials() {
             <div
               className="testimonials-track"
               style={{
-                transform: `translateX(-${offset % loopWidth}px)`,
+                transform: `translateX(${-(((offset % loopWidth) + loopWidth) % loopWidth)}px)`,
                 transition: isPaused ? 'transform 0.5s ease-out' : 'none',
                 willChange: 'transform',
               }}
@@ -233,9 +246,7 @@ export default function Testimonials() {
                   key={`${testimonial.id}-${idx}`}
                   className="testimonial-card"
                 >
-                  <div className="testimonial-quote">
-                    "{testimonial.quote}"
-                  </div>
+                  <div className="testimonial-quote">"{testimonial.quote}"</div>
                   <div className="testimonial-footer">
                     <img
                       src={mediaSrc(testimonial.avatarUrl || DEFAULT_AVATAR)}
@@ -523,9 +534,7 @@ function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
           <div className="form-group">
             <label htmlFor="quote">
               Your Experience <span className="required">*</span>
-              <span className="char-count">
-                {formData.quote.length}/500
-              </span>
+              <span className="char-count">{formData.quote.length}/500</span>
             </label>
             <textarea
               id="quote"
