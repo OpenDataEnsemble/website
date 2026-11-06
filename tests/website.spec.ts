@@ -480,3 +480,33 @@ test('layouts do not overflow at phone, tablet, or desktop widths', async ({
     }
   }
 });
+
+test('robots and sitemap expose the public site routes', async ({
+  request,
+}) => {
+  const origin = 'https://opendataensemble.org';
+
+  const robotsResponse = await request.get('/robots.txt');
+  expect(robotsResponse.ok()).toBeTruthy();
+
+  const robots = await robotsResponse.text();
+  expect(robots).toContain('User-Agent: *');
+  expect(robots).toContain('Allow: /');
+  expect(robots).toContain(`Sitemap: ${origin}/sitemap.xml`);
+
+  const sitemapResponse = await request.get('/sitemap.xml');
+  expect(sitemapResponse.ok()).toBeTruthy();
+
+  const sitemap = await sitemapResponse.text();
+  const expectedUrls = [
+    `${origin}/`,
+    `${origin}/about/`,
+    `${origin}/community/`,
+    `${origin}/community/kampala-2026/`,
+    `${origin}/contact/`,
+  ];
+
+  for (const url of expectedUrls) {
+    expect(sitemap).toContain(`<loc>${url}</loc>`);
+  }
+});
