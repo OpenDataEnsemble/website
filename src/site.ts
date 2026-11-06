@@ -3,13 +3,14 @@ export const DOCS = `${ORIGIN}/docs`;
 export const DOWNLOADS = `${ORIGIN}/downloads`;
 export const FORUM = 'https://forum.opendataensemble.org';
 export const GITHUB = 'https://github.com/OpenDataEnsemble/ode';
+export const GITHUB_WEBSITE = 'https://github.com/OpenDataEnsemble/website';
 export const LINKEDIN = 'https://www.linkedin.com/company/opendataensemble';
 export const TIKTOK = 'https://www.tiktok.com/@opendataensemble';
 export const SECURITY_EMAIL = 'security@opendataensemble.org';
 export const HELLO_EMAIL = 'hello@opendataensemble.org';
 export const GROUNDBREAKER = 'https://groundbreaker.org/';
 
-export const GITHUB_CONTRIBUTING = `${GITHUB}/blob/main/CONTRIBUTING.md`;
+export const GITHUB_CONTRIBUTING = `${GITHUB_WEBSITE}/blob/main/CONTRIBUTING.md`;
 export const GITHUB_ISSUES = `${GITHUB}/issues`;
 export const GITHUB_PORTAL = `${GITHUB}/tree/main/synkronus-portal`;
 
