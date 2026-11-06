@@ -75,6 +75,7 @@ const SCROLL_SPEED = 0.3;
 export default function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isPaused, setIsPaused] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [offset, setOffset] = useState(0);
 
@@ -115,9 +116,21 @@ export default function Testimonials() {
     }
   }, [testimonials]);
 
+  // Follow the reduced-motion preference so the carousel never auto-scrolls for it.
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(query.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setPrefersReducedMotion(event.matches);
+    };
+    query.addEventListener('change', handleChange);
+    return () => query.removeEventListener('change', handleChange);
+  }, []);
+
   // Continuous scroll animation
   useEffect(() => {
-    if (isPaused || testimonials.length === 0) return;
+    if (isPaused || prefersReducedMotion || testimonials.length === 0) return;
 
     lastTimeRef.current = Date.now();
 
@@ -138,7 +151,7 @@ export default function Testimonials() {
         animationRef.current = null;
       }
     };
-  }, [isPaused, testimonials.length]);
+  }, [isPaused, prefersReducedMotion, testimonials.length]);
 
   // Cleanup resume timer on unmount
   useEffect(() => {

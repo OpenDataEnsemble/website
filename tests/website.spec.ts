@@ -480,3 +480,40 @@ test('layouts do not overflow at phone, tablet, or desktop widths', async ({
     }
   }
 });
+
+test.describe('testimonials carousel motion', () => {
+  const trackTransform = (page: import('@playwright/test').Page) =>
+    page
+      .locator('.testimonials-track')
+      .evaluate((element) => getComputedStyle(element).transform);
+
+  async function showCarousel(page: import('@playwright/test').Page) {
+    await page.goto('/');
+    await page
+      .getByRole('heading', { name: /Trusted by teams/ })
+      .scrollIntoViewIfNeeded();
+    await expect(page.locator('.testimonials-track')).toBeVisible();
+  }
+
+  test('keeps scrolling when no motion preference is set', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await showCarousel(page);
+    const initial = await trackTransform(page);
+    await expect
+      .poll(() => trackTransform(page), { timeout: 3000 })
+      .not.toBe(initial);
+  });
+
+  test('stops auto-scrolling when reduced motion is requested', async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await showCarousel(page);
+    const initial = await trackTransform(page);
+    await page.waitForTimeout(750);
+    expect(await trackTransform(page)).toBe(initial);
+
+    await page.getByRole('button', { name: 'Next testimonials' }).click();
+    await expect.poll(() => trackTransform(page)).not.toBe(initial);
+  });
+});
