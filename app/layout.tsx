@@ -5,6 +5,7 @@ import '@ode/tokens/css';
 import { themeColor } from '@ode/tokens';
 import '../src/styles.css';
 import '../src/FieldGlobe.css';
+import { asset } from '../src/asset';
 import BackToTop from '../src/BackToTop';
 import SiteFooter from '../src/SiteFooter';
 import SiteHeader from '../src/SiteHeader';
@@ -27,7 +28,18 @@ export const metadata: Metadata = {
   },
   description:
     'Open-source tools for collecting and syncing field data when the network is unreliable. Formulus on the phone, Synkronus to bring observations together.',
-  icons: { icon: '/brand/ode-mark.png' },
+  icons: {
+    icon: {
+      url: asset('/favicon.ico'),
+      type: 'image/x-icon',
+      sizes: '16x16 32x32 48x48',
+    },
+    apple: {
+      url: asset('/apple-touch-icon.png'),
+      type: 'image/png',
+      sizes: '180x180',
+    },
+  },
   openGraph: {
     title: socialTitle,
     description: socialDescription,

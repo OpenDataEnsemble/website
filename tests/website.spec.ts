@@ -629,3 +629,74 @@ test('social previews share the static branded image', async ({
   expect(image.readUInt32BE(20)).toBe(630);
   expect(image.length).toBeLessThan(300_000);
 });
+
+test('favicon and touch icons export at their advertised URLs', async ({
+  page,
+  request,
+}) => {
+  const basePath = (process.env.BASE_PATH ?? '').replace(/\/$/, '');
+  const icons = [
+    {
+      rel: 'icon',
+      file: 'favicon.ico',
+      type: 'image/x-icon',
+      sizes: '16x16 32x32 48x48',
+    },
+    {
+      rel: 'apple-touch-icon',
+      file: 'apple-touch-icon.png',
+      type: 'image/png',
+      sizes: '180x180',
+    },
+  ];
+
+  for (const path of ['/', '/about/']) {
+    await page.goto(`${basePath}${path}`);
+    for (const icon of icons) {
+      const link = page.locator(`link[rel="${icon.rel}"]`);
+      await expect(link).toHaveCount(1);
+      await expect(link).toHaveAttribute('type', icon.type);
+      await expect(link).toHaveAttribute('sizes', icon.sizes);
+      const url = new URL((await link.getAttribute('href'))!, page.url());
+      expect(url.origin).toBe(new URL(page.url()).origin);
+      expect(url.pathname).toBe(`${basePath}/${icon.file}`);
+
+      const response = await request.get(url.toString());
+      expect(response.ok()).toBeTruthy();
+      const body = await response.body();
+      expect(body.length).toBeLessThan(32_000);
+      if (icon.rel === 'icon') {
+        expect(body.subarray(0, 4).toString('hex')).toBe('00000100');
+        const count = body.readUInt16LE(4);
+        expect(count).toBe(3);
+        const sizes = Array.from({ length: count }, (_, index) => {
+          const offset = 6 + index * 16;
+          const width = body[offset] || 256;
+          const height = body[offset + 1] || 256;
+          expect(
+            body.readUInt32LE(offset + 12) + body.readUInt32LE(offset + 8),
+          ).toBeLessThanOrEqual(body.length);
+          return `${width}x${height}`;
+        });
+        expect(sizes).toEqual(['16x16', '32x32', '48x48']);
+      } else {
+        expect(response.headers()['content-type']).toContain('image/png');
+        expect(body.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a');
+        expect(body.readUInt32BE(16)).toBe(180);
+        expect(body.readUInt32BE(20)).toBe(180);
+      }
+
+      const decoded = await page.evaluate(async (src) => {
+        const image = new Image();
+        image.src = src;
+        await image.decode();
+        return { width: image.naturalWidth, height: image.naturalHeight };
+      }, url.toString());
+      expect(decoded).toEqual(
+        icon.rel === 'icon'
+          ? { width: 48, height: 48 }
+          : { width: 180, height: 180 },
+      );
+    }
+  }
+});
