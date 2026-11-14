@@ -1,3 +1,6 @@
+// Public marketing host: GitHub Pages today, custom domain later.
+export const PUBLIC_SITE_URL = 'https://opendataensemble.github.io/website';
+
 export const ORIGIN = 'https://opendataensemble.org';
 export const DOCS = `${ORIGIN}/docs`;
 export const DOWNLOADS = `${ORIGIN}/downloads`;

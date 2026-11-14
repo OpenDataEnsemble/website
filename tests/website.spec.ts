@@ -5,6 +5,7 @@ import {
   GITHUB_CONTRIBUTING,
   GITHUB_ISSUES,
   GITHUB_WEBSITE_ISSUES,
+  PUBLIC_SITE_URL,
 } from '../src/site';
 
 const screenshotDirectory = '.preview';
@@ -560,31 +561,32 @@ test('layouts do not overflow at phone, tablet, or desktop widths', async ({
 test('robots and sitemap expose the public site routes', async ({
   request,
 }) => {
-  const origin = 'https://opendataensemble.github.io/website';
+  const basePath = (process.env.BASE_PATH ?? '').replace(/\/$/, '');
 
-  const robotsResponse = await request.get('/robots.txt');
+  const robotsResponse = await request.get(`${basePath}/robots.txt`);
   expect(robotsResponse.ok()).toBeTruthy();
 
   const robots = await robotsResponse.text();
   expect(robots).toContain('User-Agent: *');
   expect(robots).toContain('Allow: /');
-  expect(robots).toContain(`Sitemap: ${origin}/sitemap.xml`);
+  expect(robots).toContain(`Sitemap: ${PUBLIC_SITE_URL}/sitemap.xml`);
 
-  const sitemapResponse = await request.get('/sitemap.xml');
+  const sitemapResponse = await request.get(`${basePath}/sitemap.xml`);
   expect(sitemapResponse.ok()).toBeTruthy();
 
   const sitemap = await sitemapResponse.text();
   const expectedUrls = [
-    `${origin}/`,
-    `${origin}/about/`,
-    `${origin}/community/`,
-    `${origin}/community/kampala-2026/`,
-    `${origin}/contact/`,
+    `${PUBLIC_SITE_URL}/`,
+    `${PUBLIC_SITE_URL}/about/`,
+    `${PUBLIC_SITE_URL}/community/`,
+    `${PUBLIC_SITE_URL}/community/kampala-2026/`,
+    `${PUBLIC_SITE_URL}/contact/`,
   ];
 
-  for (const url of expectedUrls) {
-    expect(sitemap).toContain(`<loc>${url}</loc>`);
-  }
+  const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
+    (match) => match[1],
+  );
+  expect(urls).toEqual(expectedUrls);
 });
 
 test('social previews share the static branded image', async ({
