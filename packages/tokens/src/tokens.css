@@ -361,18 +361,62 @@
   --color-focus: var(--color-brand-primary-500);
 
   /* Website measurements and one-off colors */
-  --color-site-10150d45: color-mix(in srgb, var(--color-brand-primary-900) 27.1%, transparent);
-  --color-site-172012a8: color-mix(in srgb, var(--color-brand-primary-900) 65.9%, transparent);
-  --color-site-20251f05: color-mix(in srgb, var(--color-neutral-900) 2%, transparent);
-  --color-site-20251f12: color-mix(in srgb, var(--color-neutral-900) 7.1%, transparent);
-  --color-site-20251f15: color-mix(in srgb, var(--color-neutral-900) 8.2%, transparent);
-  --color-site-20251f17: color-mix(in srgb, var(--color-neutral-900) 9%, transparent);
-  --color-site-20251f1a: color-mix(in srgb, var(--color-neutral-900) 10.2%, transparent);
-  --color-site-20251f50: color-mix(in srgb, var(--color-neutral-900) 31.4%, transparent);
+  --color-site-10150d45: color-mix(
+    in srgb,
+    var(--color-brand-primary-900) 27.1%,
+    transparent
+  );
+  --color-site-172012a8: color-mix(
+    in srgb,
+    var(--color-brand-primary-900) 65.9%,
+    transparent
+  );
+  --color-site-20251f05: color-mix(
+    in srgb,
+    var(--color-neutral-900) 2%,
+    transparent
+  );
+  --color-site-20251f12: color-mix(
+    in srgb,
+    var(--color-neutral-900) 7.1%,
+    transparent
+  );
+  --color-site-20251f15: color-mix(
+    in srgb,
+    var(--color-neutral-900) 8.2%,
+    transparent
+  );
+  --color-site-20251f17: color-mix(
+    in srgb,
+    var(--color-neutral-900) 9%,
+    transparent
+  );
+  --color-site-20251f1a: color-mix(
+    in srgb,
+    var(--color-neutral-900) 10.2%,
+    transparent
+  );
+  --color-site-20251f50: color-mix(
+    in srgb,
+    var(--color-neutral-900) 31.4%,
+    transparent
+  );
   --color-site-252e24: var(--color-brand-primary-900);
-  --color-site-28301d05: color-mix(in srgb, var(--color-brand-primary-900) 2%, transparent);
-  --color-site-28301d14: color-mix(in srgb, var(--color-brand-primary-900) 7.8%, transparent);
-  --color-site-28301d20: color-mix(in srgb, var(--color-brand-primary-900) 12.5%, transparent);
+  --color-site-28301d05: color-mix(
+    in srgb,
+    var(--color-brand-primary-900) 2%,
+    transparent
+  );
+  --color-site-28301d14: color-mix(
+    in srgb,
+    var(--color-brand-primary-900) 7.8%,
+    transparent
+  );
+  --color-site-28301d20: color-mix(
+    in srgb,
+    var(--color-brand-primary-900) 12.5%,
+    transparent
+  );
   --color-site-314c35: var(--color-brand-primary-700);
   --color-site-344a30: var(--color-brand-primary-700);
   --color-site-365b3b: var(--color-brand-primary-700);
@@ -386,7 +430,11 @@
   --color-site-4a5d2b: var(--color-brand-primary-700);
   --color-site-4c5f3e: var(--color-brand-primary-600);
   --color-site-4e5944: var(--color-brand-primary-700);
-  --color-site-52654113: color-mix(in srgb, var(--color-brand-primary-600) 7.5%, transparent);
+  --color-site-52654113: color-mix(
+    in srgb,
+    var(--color-brand-primary-600) 7.5%,
+    transparent
+  );
   --color-site-527047: var(--color-brand-primary-600);
   --color-site-527131: var(--color-brand-primary-600);
   --color-site-527135: var(--color-brand-primary-600);
@@ -399,7 +447,11 @@
   --color-site-58703d: var(--color-brand-primary-600);
   --color-site-587151: var(--color-brand-primary-600);
   --color-site-5b6351: var(--color-neutral-700);
-  --color-site-5c67504d: color-mix(in srgb, var(--color-brand-primary-600) 30.2%, transparent);
+  --color-site-5c67504d: color-mix(
+    in srgb,
+    var(--color-brand-primary-600) 30.2%,
+    transparent
+  );
   --color-site-5c7345: var(--color-brand-primary-500);
   --color-site-5f773f: var(--color-brand-primary-500);
   --color-site-608245: var(--color-brand-primary-500);
@@ -416,9 +468,17 @@
   --color-site-728366: var(--color-brand-primary-500);
   --color-site-737b66: var(--color-neutral-600);
   --color-site-73815e: var(--color-brand-primary-500);
-  --color-site-738e3429: color-mix(in srgb, var(--color-brand-secondary-700) 16.1%, transparent);
+  --color-site-738e3429: color-mix(
+    in srgb,
+    var(--color-brand-secondary-700) 16.1%,
+    transparent
+  );
   --color-site-747c66: var(--color-neutral-600);
-  --color-site-75816630: color-mix(in srgb, var(--color-neutral-600) 18.8%, transparent);
+  --color-site-75816630: color-mix(
+    in srgb,
+    var(--color-neutral-600) 18.8%,
+    transparent
+  );
   --color-site-767d6e: var(--color-neutral-600);
   --color-site-769d53: var(--color-brand-primary-400);
   --color-site-777b71: var(--color-neutral-600);
@@ -440,12 +500,24 @@
   --color-site-8da983: var(--color-brand-primary-400);
   --color-site-91a07d: var(--color-brand-primary-400);
   --color-site-92987d: var(--color-neutral-500);
-  --color-site-9aae3c22: color-mix(in srgb, var(--color-brand-secondary-600) 13.3%, transparent);
+  --color-site-9aae3c22: color-mix(
+    in srgb,
+    var(--color-brand-secondary-600) 13.3%,
+    transparent
+  );
   --color-site-9caa8a: var(--color-brand-primary-400);
-  --color-site-9eab8d40: color-mix(in srgb, var(--color-brand-primary-300) 25.1%, transparent);
+  --color-site-9eab8d40: color-mix(
+    in srgb,
+    var(--color-brand-primary-300) 25.1%,
+    transparent
+  );
   --color-site-a3ad95: var(--color-brand-primary-300);
   --color-site-aaa0bc: var(--color-brand-secondary-600);
-  --color-site-aab59b20: color-mix(in srgb, var(--color-brand-primary-300) 12.5%, transparent);
+  --color-site-aab59b20: color-mix(
+    in srgb,
+    var(--color-brand-primary-300) 12.5%,
+    transparent
+  );
   --color-site-abb09f: var(--color-neutral-500);
   --color-site-abb49f: var(--color-brand-primary-300);
   --color-site-b0bba6: var(--color-brand-primary-300);
@@ -498,15 +570,35 @@
   --color-site-f4f6ef: var(--color-brand-secondary-50);
   --color-site-f5f6f0: var(--color-brand-secondary-50);
   --color-site-f5f7ed: var(--color-brand-secondary-50);
-  --color-site-f8f9f533: color-mix(in srgb, var(--color-brand-secondary-50) 20%, transparent);
-  --color-site-f8f9f5c9: color-mix(in srgb, var(--color-brand-secondary-50) 78.8%, transparent);
-  --color-site-f8f9f5cc: color-mix(in srgb, var(--color-brand-secondary-50) 80%, transparent);
+  --color-site-f8f9f533: color-mix(
+    in srgb,
+    var(--color-brand-secondary-50) 20%,
+    transparent
+  );
+  --color-site-f8f9f5c9: color-mix(
+    in srgb,
+    var(--color-brand-secondary-50) 78.8%,
+    transparent
+  );
+  --color-site-f8f9f5cc: color-mix(
+    in srgb,
+    var(--color-brand-secondary-50) 80%,
+    transparent
+  );
   --color-site-fafbf7: var(--color-brand-secondary-50);
   --color-site-fffef6: var(--color-brand-secondary-50);
-  --color-site-fffef8e8: color-mix(in srgb, var(--color-brand-secondary-50) 91%, transparent);
+  --color-site-fffef8e8: color-mix(
+    in srgb,
+    var(--color-brand-secondary-50) 91%,
+    transparent
+  );
   --color-site-fffefa: var(--color-brand-secondary-50);
   --color-site-fffefb: var(--color-brand-secondary-50);
-  --color-site-ffffff40: color-mix(in srgb, var(--color-neutral-white) 25.1%, transparent);
+  --color-site-ffffff40: color-mix(
+    in srgb,
+    var(--color-neutral-white) 25.1%,
+    transparent
+  );
   --duration-site-0-25s: 0.25s;
   --duration-site-0-2s: 0.2s;
   --duration-site-0-35s: 0.35s;
@@ -515,8 +607,10 @@
   --duration-site-18s: 18s;
   --easing-site-ease: ease;
   --easing-site-in-out: ease-in-out;
-  --font-family-website: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-family-website:
+    var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
   --font-line-height-site-0-85: 0.85;
   --font-line-height-site-1-02: 1.02;
   --font-line-height-site-1-035: 1.035;
@@ -798,10 +892,26 @@
   --easing-site-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
   --perspective-site-wall: 700px;
   --duration-site-slideshow: 4.5s;
-  --color-site-white-25: color-mix(in srgb, var(--color-neutral-white) 25%, transparent);
-  --color-site-white-60: color-mix(in srgb, var(--color-neutral-white) 60%, transparent);
-  --color-site-white-80: color-mix(in srgb, var(--color-neutral-white) 80%, transparent);
-  --color-site-black-45: color-mix(in srgb, var(--color-neutral-black) 45%, transparent);
+  --color-site-white-25: color-mix(
+    in srgb,
+    var(--color-neutral-white) 25%,
+    transparent
+  );
+  --color-site-white-60: color-mix(
+    in srgb,
+    var(--color-neutral-white) 60%,
+    transparent
+  );
+  --color-site-white-80: color-mix(
+    in srgb,
+    var(--color-neutral-white) 80%,
+    transparent
+  );
+  --color-site-black-45: color-mix(
+    in srgb,
+    var(--color-neutral-black) 45%,
+    transparent
+  );
 
   /* Repeated in @media rules because custom properties cannot be used there. */
   --breakpoint-site-wide: 1500px;

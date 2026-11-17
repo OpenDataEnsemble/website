@@ -3,7 +3,6 @@ import { PUBLIC_SITE_URL } from '../src/site';
 
 export const dynamic = 'force-static';
 
-
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     '/',

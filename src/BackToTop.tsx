@@ -21,7 +21,7 @@ export default function BackToTop() {
   }, []);
 
   const scrollToTop = () => {
-    const duration = 800; 
+    const duration = 800;
     const start = window.scrollY;
     const startTime = performance.now();
 
