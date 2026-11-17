@@ -4587,9 +4587,7 @@ h2,
   margin-top: var(--size-45);
 }
 
-.testimonial-modal-overlay {
-  position: fixed;
-  inset: 0;
+.testimonial-modal::backdrop {
   background: color-mix(
     in srgb,
     var(--color-brand-primary-900) 55%,
@@ -4597,25 +4595,27 @@ h2,
   );
   backdrop-filter: blur(var(--size-8));
   -webkit-backdrop-filter: blur(var(--size-8));
-  z-index: var(--z-index-site-100);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-6);
   animation: fadeIn var(--duration-site-0-25s) var(--easing-site-ease);
 }
 
 .testimonial-modal {
+  border: 0;
+  padding: 0;
+  margin: auto;
+  color: var(--ink);
   background: var(--color-neutral-white);
   border-radius: var(--radius-site-12);
   max-width: var(--size-640);
-  width: 100%;
+  width: calc(100vw - 2 * var(--spacing-6));
   max-height: min(90vh, var(--size-760));
-  display: flex;
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 var(--size-24) var(--size-60) var(--color-site-20251f28);
   animation: slideUp var(--duration-site-0-3s) var(--easing-site-ease);
+}
+
+.testimonial-modal[open] {
+  display: flex;
 }
 
 .testimonial-modal-header {
@@ -4902,7 +4902,32 @@ body.modal-open .back-to-top {
   }
 
   .testimonial-modal {
-    max-height: calc(100vh - var(--size-24));
+    width: calc(100vw - var(--size-24));
+    max-height: calc(100dvh - var(--size-24));
+  }
+
+  .testimonial-modal-header {
+    padding: var(--size-16) var(--size-18);
+  }
+
+  .testimonial-form {
+    padding: var(--size-18);
+    gap: var(--size-16);
+  }
+
+  .testimonial-modal-footer {
+    padding: var(--size-14) var(--size-18);
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonial-modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .testimonial-modal-footer .button {
+    width: 100%;
+    min-width: 0;
   }
 }
 
@@ -4927,7 +4952,7 @@ body.modal-open .back-to-top {
     transition: none !important;
   }
 
-  .testimonial-modal-overlay,
+  .testimonial-modal::backdrop,
   .testimonial-modal {
     animation: none;
   }

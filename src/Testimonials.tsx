@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { asset } from './asset';
 import { Icon } from './Icons';
 
@@ -77,6 +77,8 @@ export default function Testimonials() {
   const [isPaused, setIsPaused] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [offset, setOffset] = useState(0);
+
+  const closeForm = useCallback(() => setIsFormOpen(false), []);
 
   const animationRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(Date.now());
@@ -293,7 +295,7 @@ export default function Testimonials() {
 
       {isFormOpen && (
         <TestimonialForm
-          onClose={() => setIsFormOpen(false)}
+          onClose={closeForm}
           onSubmit={(newTestimonial: Testimonial) => {
             setTestimonials([...testimonials, newTestimonial]);
             setIsFormOpen(false);
@@ -312,6 +314,9 @@ interface TestimonialFormProps {
 }
 
 function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const closeDialog = () => dialogRef.current?.close();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -392,184 +397,212 @@ function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
   };
 
   useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const previouslyFocused = document.activeElement;
+
+    dialog.addEventListener('close', onClose);
+
+    // React Strict Mode replays effects in development. Only open the
+    // dialog when it is not already modal so the replay stays idempotent.
+    if (!dialog.open) {
+      dialog.showModal();
+    }
+
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     document.body.classList.add('modal-open');
+
     return () => {
+      dialog.removeEventListener('close', onClose);
+
+      // Do not call dialog.close() here. During Strict Mode's effect replay,
+      // its queued close event can fire after the listener is attached again
+      // and immediately close the newly opened form.
+      if (previouslyFocused instanceof HTMLElement) {
+        previouslyFocused.focus({ preventScroll: true });
+      }
+
       document.body.style.overflow = originalOverflow;
       document.body.classList.remove('modal-open');
     };
-  }, []);
+  }, [onClose]);
 
   return (
-    <div className="testimonial-modal-overlay" onClick={onClose}>
-      <div
-        className="testimonial-modal"
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-labelledby="testimonial-form-title"
-        aria-modal="true"
-      >
-        <div className="testimonial-modal-header">
-          <h3 id="testimonial-form-title">Share Your Experience</h3>
-          <button
-            className="modal-close"
-            type="button"
-            onClick={onClose}
-            aria-label="Close form"
+    <dialog
+      ref={dialogRef}
+      className="testimonial-modal"
+      aria-labelledby="testimonial-form-title"
+      onClick={(event) => {
+        if (event.target !== event.currentTarget) return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        if (
+          event.clientX < bounds.left ||
+          event.clientX > bounds.right ||
+          event.clientY < bounds.top ||
+          event.clientY > bounds.bottom
+        )
+          closeDialog();
+      }}
+    >
+      <div className="testimonial-modal-header">
+        <h3 id="testimonial-form-title">Share Your Experience</h3>
+        <button
+          className="modal-close"
+          type="button"
+          onClick={closeDialog}
+          aria-label="Close form"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
           >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <form
+        id="testimonial-form"
+        className="testimonial-form"
+        onSubmit={handleSubmit}
+      >
+        {/* Photo upload */}
+        <div className="form-group photo-group">
+          <label className="form-label-static">Profile Photo</label>
+          <div className="photo-upload">
+            <label htmlFor="photo" className="photo-upload-label">
+              <div className="photo-upload-preview">
+                <img
+                  src={photoPreview || asset(DEFAULT_AVATAR)}
+                  alt="Profile preview"
+                />
+              </div>
+              <div className="photo-upload-text">
+                <strong>
+                  {photoPreview ? 'Change photo' : 'Upload a photo'}
+                </strong>
+                <span>PNG or JPG · Max 5MB</span>
+              </div>
+            </label>
+            <input
+              type="file"
+              id="photo"
+              accept="image/*"
+              onChange={handlePhotoUpload}
+              className="photo-upload-input"
+            />
+          </div>
+          {errors.photo && <span className="error-text">{errors.photo}</span>}
         </div>
 
-        <form
-          id="testimonial-form"
-          className="testimonial-form"
-          onSubmit={handleSubmit}
-        >
-          {/* Photo upload */}
-          <div className="form-group photo-group">
-            <label className="form-label-static">Profile Photo</label>
-            <div className="photo-upload">
-              <label htmlFor="photo" className="photo-upload-label">
-                <div className="photo-upload-preview">
-                  <img
-                    src={photoPreview || asset(DEFAULT_AVATAR)}
-                    alt="Profile preview"
-                  />
-                </div>
-                <div className="photo-upload-text">
-                  <strong>
-                    {photoPreview ? 'Change photo' : 'Upload a photo'}
-                  </strong>
-                  <span>PNG or JPG · Max 5MB</span>
-                </div>
-              </label>
-              <input
-                type="file"
-                id="photo"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                className="photo-upload-input"
-              />
-            </div>
-            {errors.photo && <span className="error-text">{errors.photo}</span>}
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="name">
-                Name <span className="required">*</span>
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name ?? ''}
-                onChange={handleChange}
-                className={errors.name ? 'error' : ''}
-                placeholder="Your full name"
-              />
-              {errors.name && <span className="error-text">{errors.name}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="email">
-                Email <span className="required">*</span>
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email ?? ''}
-                onChange={handleChange}
-                className={errors.email ? 'error' : ''}
-                placeholder="you@example.com"
-              />
-              {errors.email && (
-                <span className="error-text">{errors.email}</span>
-              )}
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="role">Role</label>
-              <input
-                type="text"
-                id="role"
-                name="role"
-                value={formData.role ?? ''}
-                onChange={handleChange}
-                placeholder="e.g., Field Researcher"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="company">Organization</label>
-              <input
-                type="text"
-                id="company"
-                name="company"
-                value={formData.company ?? ''}
-                onChange={handleChange}
-                placeholder="e.g., Conservation Group"
-              />
-            </div>
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="name">
+              Name <span className="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name ?? ''}
+              onChange={handleChange}
+              className={errors.name ? 'error' : ''}
+              placeholder="Your full name"
+            />
+            {errors.name && <span className="error-text">{errors.name}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="quote">
-              Your Experience <span className="required">*</span>
-              <span className="char-count">{formData.quote.length}/500</span>
+            <label htmlFor="email">
+              Email <span className="required">*</span>
             </label>
-            <textarea
-              id="quote"
-              name="quote"
-              value={formData.quote ?? ''}
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email ?? ''}
               onChange={handleChange}
-              maxLength={500}
-              rows={4}
-              placeholder="Tell us about your experience with ODE..."
-              className={errors.quote ? 'error' : ''}
+              className={errors.email ? 'error' : ''}
+              placeholder="you@example.com"
             />
-            {errors.quote && <span className="error-text">{errors.quote}</span>}
+            {errors.email && <span className="error-text">{errors.email}</span>}
           </div>
-        </form>
-
-        <div className="testimonial-modal-footer">
-          <button
-            type="button"
-            className="button button-outline"
-            onClick={onClose}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            form="testimonial-form"
-            className="button button-lime"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Testimonial'}{' '}
-            <Icon name="check" size="var(--icon-size-site-18)" />
-          </button>
         </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="role">Role</label>
+            <input
+              type="text"
+              id="role"
+              name="role"
+              value={formData.role ?? ''}
+              onChange={handleChange}
+              placeholder="e.g., Field Researcher"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="company">Organization</label>
+            <input
+              type="text"
+              id="company"
+              name="company"
+              value={formData.company ?? ''}
+              onChange={handleChange}
+              placeholder="e.g., Conservation Group"
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="quote">
+            Your Experience <span className="required">*</span>
+            <span className="char-count">{formData.quote.length}/500</span>
+          </label>
+          <textarea
+            id="quote"
+            name="quote"
+            value={formData.quote ?? ''}
+            onChange={handleChange}
+            maxLength={500}
+            rows={4}
+            placeholder="Tell us about your experience with ODE..."
+            className={errors.quote ? 'error' : ''}
+          />
+          {errors.quote && <span className="error-text">{errors.quote}</span>}
+        </div>
+      </form>
+
+      <div className="testimonial-modal-footer">
+        <button
+          type="button"
+          className="button button-outline"
+          onClick={closeDialog}
+          disabled={isSubmitting}
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          form="testimonial-form"
+          className="button button-lime"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Submitting...' : 'Submit Testimonial'}{' '}
+          <Icon name="check" size="var(--icon-size-site-18)" />
+        </button>
       </div>
-    </div>
+    </dialog>
   );
 }

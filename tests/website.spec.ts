@@ -702,3 +702,163 @@ test('favicon and touch icons export at their advertised URLs', async ({
     }
   }
 });
+
+test('testimonial dialog traps focus, locks scrolling, and restores its opener', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const opener = page.getByRole('button', { name: 'Share Your Experience' });
+  const dialog = page.getByRole('dialog', { name: 'Share Your Experience' });
+  await opener.click();
+  await expect(dialog).toBeVisible();
+  expect(
+    await dialog.evaluate(
+      (element) =>
+        element instanceof HTMLDialogElement &&
+        element.open &&
+        element.matches(':modal'),
+    ),
+  ).toBe(true);
+  const close = dialog.getByRole('button', { name: 'Close form' });
+  const submit = dialog.getByRole('button', { name: 'Submit Testimonial' });
+  await expect(close).toBeFocused();
+  // Chromium may visit browser chrome at a boundary (activeElement is body).
+  // No background page control may receive focus, and traversal returns inside.
+  const traverse = async (key: string) => {
+    await page.keyboard.press(key);
+    if (await page.evaluate(() => document.activeElement === document.body)) {
+      await page.keyboard.press(key);
+    }
+    expect(
+      await dialog.evaluate((element) =>
+        element.contains(document.activeElement),
+      ),
+    ).toBe(true);
+  };
+  await traverse('Shift+Tab');
+  await expect(submit).toBeFocused();
+  await traverse('Tab');
+  await expect(close).toBeFocused();
+  for (let index = 0; index < 12; index++) {
+    await traverse('Tab');
+  }
+  await opener.evaluate((element) => element.focus());
+  expect(
+    await dialog.evaluate((element) =>
+      element.contains(document.activeElement),
+    ),
+  ).toBe(true);
+  const scrollY = await page.evaluate(() => window.scrollY);
+  await page.mouse.move(5, 5);
+  await page.mouse.wheel(0, 600);
+  await page.waitForTimeout(200);
+  expect(await page.evaluate(() => window.scrollY)).toBe(scrollY);
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+  await expect(opener).toBeFocused();
+  expect(await page.evaluate(() => document.body.style.overflow)).toBe('');
+  for (const name of ['Close form', 'Cancel']) {
+    await opener.click();
+    await dialog.getByRole('button', { name, exact: true }).click();
+    await expect(dialog).not.toBeVisible();
+    await expect(opener).toBeFocused();
+  }
+  await opener.click();
+  await dialog.getByRole('heading').click();
+  await expect(dialog).toBeVisible();
+  await page.mouse.click(5, 5);
+  await expect(dialog).not.toBeVisible();
+  await expect(opener).toBeFocused();
+});
+
+test('testimonial dialog preserves validation, submission, and persistence', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const opener = page.getByRole('button', { name: 'Share Your Experience' });
+  const dialog = page.getByRole('dialog', { name: 'Share Your Experience' });
+  await opener.click();
+  await dialog.getByRole('button', { name: 'Submit Testimonial' }).click();
+  for (const message of [
+    'Name is required',
+    'Email is required',
+    'Quote is required',
+  ]) {
+    await expect(dialog.getByText(message, { exact: true })).toBeVisible();
+  }
+  await dialog.getByLabel('Name', { exact: false }).fill(' Ada Okello ');
+  await dialog.getByLabel('Email').fill('ada@example.org');
+  const quote = dialog.getByLabel('Your Experience');
+  await quote.fill('x'.repeat(501));
+  await expect(quote).toHaveValue('x'.repeat(500));
+  await quote.fill(' Reliable observations from our field team. ');
+  await dialog.getByRole('button', { name: 'Submit Testimonial' }).click();
+  await expect(dialog).not.toBeVisible();
+  await expect(opener).toBeFocused();
+  const card = page
+    .locator('.testimonial-card')
+    .filter({ hasText: 'Ada Okello' })
+    .first();
+  await expect(card).toContainText(
+    'Reliable observations from our field team.',
+  );
+  await expect(card).toContainText('Team Member');
+  await expect(card).toContainText('Community');
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        JSON.parse(localStorage.getItem('ode-testimonials') || '[]').at(-1),
+      ),
+    )
+    .toMatchObject({
+      name: 'Ada Okello',
+      role: 'Team Member',
+      company: 'Community',
+      quote: 'Reliable observations from our field team.',
+      avatarUrl: '/brand/avatar.png',
+    });
+  await page.reload();
+  await expect(card).toContainText(
+    'Reliable observations from our field team.',
+  );
+});
+
+test('testimonial dialog keeps optional details and uploaded photo', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Share Your Experience' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Share Your Experience' });
+  await dialog.getByLabel('Name', { exact: false }).fill('Grace Nakiyemba');
+  await dialog.getByLabel('Email').fill('grace@example.org');
+  await dialog.getByLabel('Role', { exact: true }).fill('Field Researcher');
+  await dialog.getByLabel('Organization').fill('Field Team');
+  await dialog
+    .getByLabel('Your Experience')
+    .fill('Collecting observations offline.');
+  const photo = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aFOsAAAAASUVORK5CYII=',
+    'base64',
+  );
+  await dialog.locator('input[type="file"]').setInputFiles({
+    name: 'avatar.png',
+    mimeType: 'image/png',
+    buffer: photo,
+  });
+  await expect(
+    dialog.getByRole('img', { name: 'Profile preview' }),
+  ).toHaveAttribute('src', /^data:image\/png;base64,/);
+  await dialog.getByRole('button', { name: 'Submit Testimonial' }).click();
+  await expect(dialog).not.toBeVisible();
+  const card = page
+    .locator('.testimonial-card')
+    .filter({ hasText: 'Grace Nakiyemba' })
+    .first();
+  await expect(card).toContainText('Field Researcher');
+  await expect(card).toContainText('Field Team');
+  await expect(card).toContainText('Collecting observations offline.');
+  await expect(card.locator('img')).toHaveAttribute(
+    'src',
+    `data:image/png;base64,${photo.toString('base64')}`,
+  );
+});
